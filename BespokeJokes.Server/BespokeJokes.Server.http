@@ -1,0 +1,6 @@
+@BespokeJokes.Server_HostAddress = http://localhost:5183
+
+GET {{BespokeJokes.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
