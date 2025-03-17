@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { constructor } from 'jasmine';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { Joke } from './Models/Joke';
 
 @Injectable({
@@ -12,7 +11,7 @@ export class DataService {
 
   jokes$: BehaviorSubject<Joke[]> = new BehaviorSubject<Joke[]>([]);
   joke$: BehaviorSubject<Joke> = new BehaviorSubject<Joke>({
-    jokeID: 1,
+    jokeId: 1,
     jokeText: '',
     punchLineText: '',
     author: '',
@@ -29,19 +28,36 @@ export class DataService {
 
   getAllJokes() {
     this.http.get<Joke[]>(`/api/Jokes`).subscribe(data => {
+      console.log(data);
       this.jokes$.next(data);
     });
   }
 
-  getRandomJoke(): Observable<Joke> {
-    return this.http.get<Joke[]>(`/api/Jokes`).subscribe(data => {
-      const max = data.length;
-      const min = 1;
+  getRandomJoke(jokes: Joke[]): Joke {
+      const max = jokes.length;
+      const min = 0;
 
-      let index = Math.floor(Math.random() * (max - min) + min);
+    let index = Number(Math.floor(Math.random() * (max - min) + min));
+    console.log(index);
 
-      return of(data[index]);
+      return jokes[index];
+  }
 
+  getJokeInfoById(id: number): Observable<Joke> {
+    return this.http.get<Joke>(`/api/Jokes/${id}`).pipe(
+      tap(data => this.joke$.next(data))
+    );
+  }
+
+  updateJokeById(id: number, project: Joke) {
+    this.http.put<Joke>(`/api/Jokes/${id}`, project).subscribe(data => {
+      this.joke$.next(data);
+    });
+  }
+
+  getJokeById(id: number) {
+    this.http.get<Joke>(`/api/Jokes/${id}`).subscribe(data => {
+      this.joke$.next(data);
     });
   }
 

@@ -10,7 +10,7 @@ import { Joke } from '../Models/Joke';
 export class CardComponent {
 
   @Input() JokeDetail: Joke = {
-      jokeID: 0,
+      jokeId: 0,
       jokeText: 'test',
       punchLineText: 'test test',
       author: 'me',

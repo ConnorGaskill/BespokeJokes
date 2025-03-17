@@ -1,6 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using BespokeJokes.Server.Data;var builder = WebApplication.CreateBuilder(args);
+using BespokeJokes.Server.Data;
+
+
+
+var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddDbContext<BespokeJokesServerContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BespokeJokesServerContext") ?? throw new InvalidOperationException("Connection string 'BespokeJokesServerContext' not found.")));
 

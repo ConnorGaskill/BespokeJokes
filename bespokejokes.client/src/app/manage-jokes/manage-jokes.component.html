@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col">
+    <button class="primary">Create</button>
+  </div>
+  <div class="col">
+    <button class="primary">Edit</button>
+  </div>
+  <div class="col">
+    <button class="primary">Delete</button>
+  </div>
+</div>
+<h1>{{formState}}</h1>
+<form [formGroup]="jokeFormGroup" (ngSubmit)="onSubmit()">
+  <div class="mb-3" *ngIf(!formState.delete)>
+    <label for="exampleFormControlTextarea1" class="form-label">Joke ID here</label>
+    <textarea class="form-control" formControlName="jokeId" id="exampleFormControlTextarea1" rows="3"></textarea>
+  </div>
+  <div class="mb-3">
+    <label for="exampleFormControlTextarea1" class="form-label">Joke text here</label>
+    <textarea class="form-control" formControlName="jokeText" id="exampleFormControlTextarea1" rows="3"></textarea>
+  </div>
+  <div class="mb-3" *ngIf(!formState.delete)>
+    <label for="exampleFormControlTextarea1" class="form-label">Joke punchline here</label>
+    <textarea class="form-control" formControlName="punchLineText" id="exampleFormControlTextarea1" rows="3"></textarea>
+  </div>
+  <div class="mb-3" *ngIf(!formState.delete)>
+    <label for="exampleFormControlInput1" class="form-label">Author</label>
+    <input type="email" class="form-control" formControlName="author" id="exampleFormControlInput1" placeholder="Joke text here">
+  </div>
+  <span></span>
+  <button type="submit">Submit</button>
+</form>
+

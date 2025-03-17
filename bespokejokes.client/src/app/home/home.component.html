@@ -1,2 +1,31 @@
 <h5>Jokes!</h5>
-<app-card [JokeDetail]=" joke"></app-card>
+<app-card [JokeDetail]="joke"></app-card>
+<hr />
+<div class="container d-flex justify-content-center">
+  <ul>
+    <li>
+      <h2>
+        Author: {{joke.author}}
+      </h2>
+    </li>
+    <li>
+      <h2>
+        Joke ID: {{joke.jokeId}}
+      </h2>
+    </li>
+    <li>
+      <h1>
+        Created at: {{joke.postDate | date:'short'}}
+      </h1>
+    </li>
+    <li *ngIf="joke.postDate != joke.updateDate">
+      <h1>
+        Updated at: {{joke.updateDate | date:'short'}}
+      </h1>
+    </li>
+  </ul>
+</div>
+<div>
+  <button class="btn btn-sm btn-info w-100">Load</button>
+  <button class="btn btn-sm btn-info w-100">Load</button>
+</div>
