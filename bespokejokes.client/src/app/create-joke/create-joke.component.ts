@@ -24,21 +24,21 @@ export class CreateJokeComponent {
   });
 
   joke: Joke = {
-    jokeId: -1,
+    jokeId: 0,
     jokeText: 'test',
     punchLineText: 'test test',
     author: 'me',
-    postDate: new Date("2025 3 11"),
-    updateDate: new Date(0)
+    postDate: new Date(),
+    updateDate: new Date()
   }
 
   onSubmit() {
 
-    this.joke = this.jokeFormGroup.value;
-    this.joke.postDate = new Date();
+    const createdJoke:Joke = {...this.joke, ...this.jokeFormGroup.value}
 
-    //this.dataService.createJoke(this.joke);
+    this.dataService.createJoke(createdJoke);
     console.log(this.joke.author);
+    this.jokeFormGroup.reset();
   }
 
 

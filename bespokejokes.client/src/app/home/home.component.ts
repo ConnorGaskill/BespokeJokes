@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Joke } from '../Models/Joke';
 import { DataService } from '../data.service';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -11,22 +11,20 @@ import { BehaviorSubject, tap } from 'rxjs';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private data: DataService) { }
+  jokes$: BehaviorSubject<Joke[]>;
 
-  joke: Joke = {
-      jokeId: 0,
-      jokeText: 'test',
-      punchLineText: 'test test',
-      author: 'me',
-      postDate: new Date("2025 3 11"),
-      updateDate: new Date("2025 3 11")
-  }
+  constructor(private data: DataService) { this.jokes$ = this.data.jokes$ }
+
+  isLoaded: boolean = false;
+
+  
   ngOnInit(): void {
     this.data.getAllJokes();
-    this.data.jokes$.pipe(tap(jokearr => [this.data.getRandomJoke(jokearr)])).subscribe(jokes => {
-    });
-    this.data.jokes$.subscribe(jokes => {
-      this.joke = this.data.getRandomJoke(jokes);
-    });
   }
+  setJoke() {
+    this.isLoaded = false;
+    this.data.getAllJokes();
+    console.log(this.jokes$);
+  }
+
 }

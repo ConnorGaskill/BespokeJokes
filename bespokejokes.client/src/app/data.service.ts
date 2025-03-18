@@ -49,14 +49,21 @@ export class DataService {
     );
   }
 
-  updateJokeById(id: number, project: Joke) {
-    this.http.put<Joke>(`/api/Jokes/${id}`, project).subscribe(data => {
-      this.joke$.next(data);
+  updateJokeById(id: number, joke: Joke) {
+    console.log(joke);
+    this.http.put<Joke>(`/api/Jokes/${id}`, joke).subscribe(data => {
+      this.joke$.next(joke);
     });
   }
 
   getJokeById(id: number) {
     this.http.get<Joke>(`/api/Jokes/${id}`).subscribe(data => {
+      this.joke$.next(data);
+    });
+  }
+
+  deleteJokeById(id: number) {
+    this.http.delete<Joke>(`/api/Jokes/${id}`).subscribe(data => {
       this.joke$.next(data);
     });
   }

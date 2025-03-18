@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { Joke } from '../Models/Joke';
-import { FormGroup, FormControl } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { emptyJoke, Joke } from '../Models/Joke';
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { DataService } from '../data.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { pipe } from 'rxjs';
+import { BehaviorSubject, isEmpty, pipe } from 'rxjs';
 
 @Component({
   selector: 'app-edit-joke',
@@ -11,52 +11,71 @@ import { pipe } from 'rxjs';
   templateUrl: './edit-joke.component.html',
   styleUrl: './edit-joke.component.css'
 })
-export class EditJokeComponent {
+export class EditJokeComponent implements OnInit {
 
+  jokeFormGroup: FormGroup;
   constructor(
     private route: ActivatedRoute,
     private dataService: DataService,
-    private router: Router) { }
+    private router: Router,
+    private fb : FormBuilder) {
 
-  jokeFormGroup: FormGroup = new FormGroup({
-    jokeText: new FormControl(''),
-    punchLineText: new FormControl(''),
-    author: new FormControl('')
-  });
+    this.joke$ = this.dataService.joke$;
+    this.joke$.subscribe((jok: Joke) => {
+      this.joke = jok;
+      console.log(this.isFound)
+      if (jok.jokeText !== '') {
+        this.isFound = true;
+      }
+      console.log(jok);
+      this.jokeFormGroup.patchValue({
+        jokeText: this.joke.jokeText,
+        punchLineText: this.joke.punchLineText,
+        author: this.joke.author
+      })
 
-  joke: Joke = {
-      jokeId: 0,
-      jokeText: '',
-      punchLineText: '',
-      author: '',
-      postDate: new Date(0),
-      updateDate: new Date(0)
+
+    });
+    this.jokeFormGroup = this.fb.group({
+      jokeText: [''],
+      punchLineText: [''],
+      author : ['']
+    });
+  }
+  ngOnInit(): void {
+    this.jokeFormGroup.patchValue({
+      jokeText: this.joke.jokeText,
+      punchLineText: this.joke.punchLineText,
+      author: this.joke.author
+    })
   }
 
-  isFound: Boolean = false;
+  joke$: BehaviorSubject<Joke>;
+  isFound: boolean = false;
+  joke: Joke = emptyJoke;
+
+
 
   search(num: string) {
-
     this.isFound = false;
+    this.dataService.getJokeById(Number(num));
 
-
-    this.dataService.getJokeInfoById(Number(num));
-    if (this.dataService.joke$ == null) {
-      return;
-    }
-    console.log('this',this.dataService.joke$.subscribe((jok: Joke) => jok));
-    this.dataService.joke$.subscribe(pipe((jok: Joke) => this.joke = jok
-    ));
-    this.isFound = true;
-    console.log(this.joke);
-    console.log(this.isFound);
-    
   }
 
   onSubmit() {
+    this.joke.updateDate = new Date();
+    const updatedJoke: Joke = { ...this.joke, ...this.jokeFormGroup.value };
 
+    console.log(updatedJoke);
+
+    this.dataService.updateJokeById(updatedJoke.jokeId, updatedJoke);
+    
+
+    }
+
+  Delete() {
+    console.log(`deleting ${this.joke}...`);
+    this.dataService.deleteJokeById(this.joke.jokeId);
   }
-
-
 
 }
